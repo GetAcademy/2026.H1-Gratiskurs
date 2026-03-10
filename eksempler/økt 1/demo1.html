@@ -9,6 +9,7 @@
         canvas {
             border: 1px solid black;
         }
+
         img {
             display: none;
         }
@@ -16,8 +17,7 @@
 </head>
 
 <body>
-    <img id="dog" src="https://atlantahumane.org/wp-content/uploads/2025/11/dog-hero.jpg"/>
-
+    <img id="dog" src="https://atlantahumane.org/wp-content/uploads/2025/11/dog-hero.jpg" />
 
     <canvas id="canvas" width="800" height="600"></canvas>
 
@@ -25,20 +25,37 @@
         const c = document.getElementById('canvas');
         const ctx = c.getContext('2d');
 
+        // tegne bilde
         const img = document.getElementById("dog");
-        ctx.drawImage(img, -280, 40);
+        // ctx.drawImage(img, x, y, bredde, høyde);
+        // ctx.drawImage(img, 80, 300);
+        ctx.drawImage(img, 80, 360, 640, 240);
 
+        // tegne en fylt firkant
         ctx.fillStyle = 'blue';
         // ctx.fillRect(x, y, bredde, høyde);
         ctx.fillRect(100, 200, 100, 50);
 
+        // tegne omrisset av en firkant
         ctx.strokeStyle = 'lightblue';
         ctx.lineWidth = 10;
         ctx.strokeRect(100, 200, 100, 50);
 
+        // tegne tekst
         ctx.fillStyle = 'green';
         ctx.font = "50px Verdana";
         ctx.fillText('Terje', 80, 300);
+
+        // tegne tekstomriss
+        ctx.strokeStyle = 'green';
+        ctx.lineWidth = 1;
+        ctx.strokeText('Terje', 80, 100);
+
+        // sirkel
+        ctx.beginPath();
+        ctx.arc(500, 75, 50, 0, 2 * Math.PI);
+        //ctx.stroke();
+        ctx.fill();
     </script>
 </body>
 

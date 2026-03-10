@@ -1,292 +1,384 @@
-# Gratiskurs i programmering – Økt 1
+# 🧭 Økt 1 – Introduksjon og enkel tegning i JavaScript
 
-Dette notatet brukes både **i undervisningen** og som **gjennomgang etter timen**.
-Vi skriver all kode **fra bunnen av** i timen. Etterpå kan du bruke dette notatet for å gå gjennom stegene igjen.
-
-I dag skal vi:
-
-* lage vår første JavaScript-fil
-* tegne grafikk på skjermen
-* lage en enkel funksjon
-
-Dette er starten på spillet vi skal bygge gjennom kurset.
+**Tid:** ca. 1,5 time  
+**Struktur:** tre deler × ca. 25 minutter + pauser  
+**Dato:** tirsdag 10. mars kl. 14:00 – 15:30  
 
 ---
 
-# Før vi begynner
+## 🗓️ Disposisjon
 
-Vi starter alltid med en enkel malfil:
+### Del 1 (14:00 - ca. 14:25) – Introduksjon og oppstart
 
-`canvas_mal.html`
+**Mål:** Bli kjent, forstå hvordan kurset fungerer og få alt installert.
 
-Når vi lager første demo, **kopierer vi denne filen** og gir den nytt navn.
+#### Velkommen
+- Presentasjon av lærerne: **Anita**, **Geir**, **Martin** og **Terje** 
+- Kort om kurset:
+  - 2 uker, 4 økter á 1,5 t.  
+  - Alt tas opp → lenker på **Discord** og i **GitHub-repoet**  
+    - Repo: https://github.com/GetAcademy/2026.H1-Gratiskurs
+  - Oppfølging med Martin, Kenneth og Anita
 
-For eksempel:
+#### Praktisk informasjon
+- Det er **lov å ha kamera av**, men hyggelig om noen har det på.  
+- **Discord:** brukes til oppfølging, spørsmål, lenker til opptak og oppgaver.  
+- Opplegg: Se → forstå → spør – **ikke prøv å kode parallelt**.  
 
-```
-demo1.html
-```
+#### Installasjon og verktøy
+1. **Last ned VS Code:**  
+   https://code.visualstudio.com/download  
+2. **Installer utvidelsen “Live Server”.**  
+3. **Test:** Åpne en enkel HTML-fil og velg *Go Live*.  
+4. Bruk nettleser (Chrome/Edge eller Firefox).  
 
-Malfilen inneholder allerede et canvas og litt startkode.
+#### Demo 1 - Tegne en firkant
+Forklar at dette er malen som alltid kan gjenbruke.
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Canvas</title>
-<style>
-canvas {
-border: 1px solid black;
-}
-</style>
-</head>
+<!doctype html>
+<html>
+  <style>
+    canvas { background-color: gray; }
+  </style>
+  <body>
+    <canvas id="game" width="800" height="800"></canvas>
+    <script>
+      const c = document.getElementById("game");
+      const ctx = c.getContext("2d");
 
-<body>
-
-<canvas id="canvas" width="800" height="600"></canvas>
-
-<script>
-
-const c = document.getElementById('canvas');
-const ctx = c.getContext('2d');
-
-// Skriv kode her ↓
-
-</script>
-
-</body>
+      ctx.fillStyle = "red";
+      ctx.fillRect(50, 50, 100, 60);   // firkant
+    </script>
+  </body>
 </html>
 ```
 
-To linjer er spesielt viktige:
+#### Forklare alle linjene i programmet 
+
+ - Vi går gjennom alle delene av eksemplet og forklarer. 
+ - Vi tegner flere firkanter - med variasjon i:
+    - posisjon
+    - størrelse
+    - farge
+- Vi ser på hva rekkefølgen av kommandoene har å si
+- Hva kan gå feil? Forhåpentligvis gjør jeg noen feil 😅 - hvis ikke så må vi konstruere noen feil og se hva som skjer da. 
+  - Stavefeil  → "is not defined" i konsollen.  
+  - Glemte parenteser → funksjonen kjører ikke (`drawBox` vs `drawBox()`).  
+  - Feil rekkefølge på kode → tegninger havner under/over hverandre uventet.  
+  - Jobbemetode: Åpne konsoll → les første feilmelding → klikk linjenummer → rett → refresh.  
+
+---
+
+### Del 2 (25 – 50 min) – Canvas og grunnleggende tegning
+
+**Mål:** Forstå grunnstrukturen i HTML + JavaScript, og lære å tegne i canvas.
+
+#### Tegne med JavaScript
+
+Ulike måter å tegne på (full oversikt på https://www.w3schools.com/jsref/api_canvas.asp): 
+- linjer
+    ```js
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(200, 100);
+    ctx.stroke();
+    ```
+- sirkler og sirkelbuer
+    ```js
+    ctx.beginPath();
+    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ```
+- tekst
+    ```js
+    ctx.font = "30px Arial";
+    ctx.fillText("Hello World", 10, 50);
+    ctx.strokeText("Hello World", 10, 50);
+    ```
+- bilde
+    ```html
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Operation_Upshot-Knothole_-_Badger_001.jpg" style="display: none"/>
+    ```
+    ```js
+    const img = document.getElementById('bildeId');
+    ctx.drawImage(img, 10, 10);
+    ```
+    - ev. laste ned bilde + https://www.remove.bg/ + legge i mappen
+
+#### Eksempel
+Vis hvordan vi “snakker til canvas” gjennom `ctx`:
 
 ```js
-const c = document.getElementById('canvas');
-const ctx = c.getContext('2d');
-```
-
-Her gjør vi to ting:
-
-1. finner canvas-elementet i HTML
-2. får et **tegneverktøy** (`ctx`) som lar JavaScript tegne grafikk
-
-All koden vår skrives under kommentaren:
-
-```js
-// Skriv kode her ↓
-```
-
----
-
-# Hvordan programmer vi lager i dette kurset fungerer
-
-Gjennom kurset kommer programmene våre stort sett til å gjøre to ting:
-
-```
-1. Vi har noen variabler (en modell)
-2. Vi tegner modellen på skjermen
-```
-
-I spill gjøres dette mange ganger i sekundet.
-
-Senere i kurset vil modellen vår for eksempel være:
-
-```
-birdY
-pipeX
-backgroundX
-```
-
-Men i dag begynner vi helt enkelt:
-vi skal bare **tegne ting på skjermen**.
-
----
-
-# Steg 1 – Lag demo1.html
-
-1. Kopier `canvas_mal.html`
-2. Gi kopien navnet
-
-```
-demo1.html
-```
-
-Åpne filen i nettleseren.
-
----
-
-# Første tegning
-
-Legg til denne koden i `<script>`:
-
-```js
-ctx.fillStyle = "green";
-ctx.fillRect(200, 200, 200, 200);
-```
-
-Lagre filen og oppdater nettleseren.
-
-Du skal nå se et grønt kvadrat.
-
----
-
-## Hva betyr tallene?
-
-```js
-ctx.fillRect(200, 200, 200, 200);
-```
-
-Tallene betyr:
-
-```
-x-posisjon
-y-posisjon
-bredde
-høyde
-```
-
-Rektangelet tegnes altså:
-
-* 200 piksler fra venstre
-* 200 piksler fra toppen
-* 200 piksler bredt
-* 200 piksler høyt
-
----
-
-# Steg 2 – Lag demo2.html
-
-Når vi lager neste demo gjør vi alltid dette:
-
-1. Kopier forrige demo
-2. Gi den nytt navn
-
-```
-demo2.html
-```
-
-Dette gjør at vi kan bygge programmet **steg for steg**.
-
----
-
-# Tegne flere figurer
-
-I `demo2.html` kan vi tegne flere rektangler.
-
-```js
-ctx.fillStyle = "green";
-ctx.fillRect(200, 200, 200, 200);
-
 ctx.fillStyle = "red";
-ctx.fillRect(100, 100, 100, 100);
+ctx.fillRect(50, 50, 100, 60);   // firkant
 
+ctx.beginPath();
+ctx.arc(200, 150, 40, 0, Math.PI * 2); // sirkel
 ctx.fillStyle = "blue";
-ctx.fillRect(400, 200, 150, 150);
-```
+ctx.fill();
 
-Nå har vi flere figurer på skjermen.
+ctx.moveTo(0, 0);
+ctx.lineTo(400, 300);
+ctx.stroke();                     // linje
+
+ctx.fillText("Hei canvas!", 140, 280);
+```
 
 ---
 
-# Tegne en sirkel
+### Del 3 (50–75 min) – Funksjoner og egne kommandoer
 
-Canvas kan også tegne sirkler.
+**Mål:**  
+- Forstå hva en funksjon er  
+- Lage egne kommandoer  
+- Introdusere parametre én etter én  
+- Avslutte med en funksjon som tegner et mer komplekst objekt (ansikt)
+- Feilsøking
+
+---
+
+# 🧩 Trinn 1 – Enkel funksjon (uten parametre, fast gjennomsiktig farge)
+
+Vi viser at en funksjon gjør det samme hver gang den kalles.
 
 ```js
-ctx.beginPath();
-ctx.arc(400, 300, 50, 0, Math.PI * 2);
-ctx.fill();
+function drawBox() {
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)"; // gjennomsiktig turkis
+  ctx.fillRect(100, 100, 120, 80);
+}
+
+// Kall funksjonen flere ganger:
+drawBox();
+drawBox();
+drawBox();
 ```
 
-Parameterne betyr:
+**Poenger:**
+- En funksjon er en egen kommando vi lager selv.
+- Hver gang vi kaller den, kjøres den samme “oppskriften”.
+- Dette gjør koden ryddig og forutsigbar.
 
-```
-x
-y
-radius
-```
+---
+# 🧩 Trinn 1b – onload => kjekt for bilder!
+
+
+
 
 ---
 
-# Steg 3 – Lag demo3.html
+# 🧩 Trinn 2 – Legge til én parameter: x-posisjon
 
-Vi fortsetter på samme måte:
+Vi lar brukeren bestemme hvor figuren havner horisontalt.
 
-1. Kopier `demo2.html`
-2. kall kopien
+```js
+function drawBox(x) {
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+  ctx.fillRect(x, 100, 120, 80);
+}
 
+drawBox(50);
+drawBox(200);
+drawBox(350);
 ```
-demo3.html
-```
 
-I denne demoen skal vi bruke **funksjoner**.
+**Poeng:**  
+- Funksjonen gjør fortsatt det samme, men du styrer *hvor*.
 
 ---
 
-# Funksjoner
+# 🧩 Trinn 3 – To parametre: x og y
 
-Når vi programmerer gjør vi ofte det samme flere ganger.
+Nå kan firkanten plasseres hvor som helst på skjermen.
 
-Da kan vi samle koden i en funksjon.
+```js
+function drawBox(x, y) {
+  ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+  ctx.fillRect(x, y, 120, 80);
+}
 
-Lag denne funksjonen:
+drawBox(50, 50);
+drawBox(200, 120);
+drawBox(350, 250);
+```
+
+**Poeng:**  
+- Én funksjon kan tegne mange forskjellige varianter av “samme ting”.
+- Funksjoner med parametre = fleksible funksjoner.
+
+---
+
+# 🧩 Trinn 4 – Legge til farge som parameter
+
+Nå styrer vi ikke bare posisjon, men også utseendet.
+
+```js
+function drawBox(x, y, color) {
+  ctx.fillStyle = color; // fargen bestemt av parameteren
+  ctx.fillRect(x, y, 120, 80);
+}
+
+drawBox(50, 50, "red");
+drawBox(200, 120, "green");
+drawBox(350, 250, "rgba(0, 0, 255, 0.5)"); // blå med gjennomsiktighet
+```
+
+**Poenger:**  
+- Funksjonen kan nå gjøre “det samme”, men på **mange måter**.
+- Vi har nå full kontroll over posisjon *og* farge.
+
+---
+
+# 🧩 Trinn 5 – Funksjon som tegner noe mer komplekst: et enkelt ansikt
+
+Her bruker vi funksjoner til å bygge en liten figur.
 
 ```js
 function drawFace(x, y) {
+  // Hode
+  ctx.beginPath();
+  ctx.fillStyle = "#ffcc99";
+  ctx.arc(x, y, 60, 0, Math.PI * 2);
+  ctx.fill();
 
-    ctx.fillStyle = "yellow";
+  // Venstre øye
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.arc(x - 20, y - 15, 8, 0, Math.PI * 2);
+  ctx.fill();
 
-    ctx.beginPath();
-    ctx.arc(x, y, 50, 0, Math.PI * 2);
-    ctx.fill();
+  // Høyre øye
+  ctx.beginPath();
+  ctx.arc(x + 20, y - 15, 8, 0, Math.PI * 2);
+  ctx.fill();
 
-    ctx.fillStyle = "black";
+  // Munn
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 4;
+  ctx.arc(x, y + 10, 25, 0, Math.PI);
+  ctx.stroke();
+}
 
-    ctx.beginPath();
-    ctx.arc(x - 20, y - 10, 8, 0, Math.PI * 2);
-    ctx.arc(x + 20, y - 10, 8, 0, Math.PI * 2);
-    ctx.fill();
+drawFace(150, 150);
+drawFace(400, 200);
+```
 
+**Poenger:**
+- En funksjon kan inneholde mange tegnekommandoer.
+- Hele “ansiktet” kan flyttes med bare x og y.
+- Dette er grunnlaget for å lage karakterer i spill.
+
+---
+
+# 🧩 Trappetrinn 6 – DRY: Don’t Repeat Yourself  
+### Lage egne funksjoner for hode, øye og munn
+
+Nå viser vi hvorfor funksjoner virkelig er nyttige:  
+Vi slipper å gjenta den samme koden flere ganger.
+
+I stedet for én stor `drawFace`-funksjon, deler vi opp i små byggeklosser.
+
+---
+
+## 6a) Funksjon for å tegne et hode
+
+```js
+function drawHead(x, y) {
+  ctx.beginPath();
+  ctx.fillStyle = "#ffcc99";
+  ctx.arc(x, y, 60, 0, Math.PI * 2);
+  ctx.fill();
 }
 ```
 
-Denne funksjonen tegner et enkelt ansikt.
-
 ---
 
-# Bruke funksjonen
+## 6b) Funksjon for å tegne ett øye
 
-Vi kan nå tegne flere ansikter slik:
+Her er poenget: **samme funksjon tegner begge øynene**, forskjellen ligger bare i parameterne.
 
 ```js
-drawFace(200, 200);
-drawFace(400, 300);
-drawFace(600, 200);
+function drawEye(x, y) {
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.arc(x, y, 8, 0, Math.PI * 2);
+  ctx.fill();
+}
 ```
 
-Fordelen med funksjoner er at vi kan **gjenbruke kode**.
+Vi kaller den to ganger med forskjellige koordinater:
+
+```js
+drawEye(x - 20, y - 15); // venstre øye
+drawEye(x + 20, y - 15); // høyre øye
+```
 
 ---
 
-# Hva vi har gjort i dag
+## 6c) Funksjon for å tegne en munn
 
-I denne økten har vi:
-
-* brukt en canvas-mal
-* laget våre egne demo-filer
-* tegnet grafikk med JavaScript
-* laget en funksjon
-
-Dette er grunnlaget for resten av kurset.
+```js
+function drawMouth(x, y) {
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 4;
+  ctx.arc(x, y + 10, 25, 0, Math.PI);
+  ctx.stroke();
+}
+```
 
 ---
 
-# Neste økt
+## 6d) Ny versjon av drawFace – nå med gjenbruk
 
-I neste økt skal vi gjøre noe mye mer spennende.
+Nå setter vi sammen komponentene til én figur:
 
-Vi skal få ting til å **bevege seg**.
+```js
+function drawFace(x, y) {
+  drawHead(x, y);
+  drawEye(x - 20, y - 15);
+  drawEye(x + 20, y - 15);
+  drawMouth(x, y);
+}
 
-Da begynner vi å bygge spillet vårt.
+drawFace(150, 150);
+drawFace(400, 200);
+```
+
+---
+
+## Hvorfor er dette bedre?
+
+- Hvis vi vil endre fargen på øynene → endrer vi **ett sted**.  
+- Hvis vi vil gjøre hodet større → endrer vi **ett sted**.  
+- Hvis vi vil bruke øyne til et annet prosjekt → vi kan gjenbruke funksjonen.  
+- Funksjonene blir små, enkle og gjør **én ting hver**.  
+- `drawFace()` blir ren og lett å lese, nesten som en setning:
+
+```
+Tegn hode  
+Tegn venstre øye  
+Tegn høyre øye  
+Tegn munn  
+```
+
+Dette er kjernen i **DRY**:  
+> “Don’t Repeat Yourself” – skriv ting *ett sted*, bruk det mange ganger.
+
+---
+
+Neste steg i kurset:  
+I Økt 2 bruker vi denne idéen til å lage **bevegelige** figurer!
+
+
+# 🧩 Oppsummering
+
+I denne delen lærte dere:
+
+- Hva funksjoner er og hvorfor vi lager dem  
+- Hvordan vi kan starte enkelt og bygge opp kompleksitet  
+- Hvordan parametre gir oss mer kontroll  
+- Hvordan vi kan tegne en hel figur med én funksjon  
+
+Neste gang begynner vi med **bevegelse og animasjon** – ting skal røre på seg!

@@ -1,7 +1,7 @@
 # Gratiskurs JavaScript og canvas — Get Academy (Desember 2025)
 <!-- markdownlint-disable MD033 -->
 <a href="https://getacademy.no">
-<img src="img/GET_RGB_logo-01-2.png" alt="GET Logo" width="200" height="auto">
+<img src="https://getacademy.no/hubfs/GET_RGB_logo-01-2.png" alt="GET Logo" width="200" height="auto">
 </a>
 <!-- markdownlint-disable MD033 -->
 

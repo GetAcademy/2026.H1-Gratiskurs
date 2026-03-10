@@ -1,5 +1,12 @@
 # GET Academy – Gratiskurs i programmering
 
+
+- Presentasjon av oss lærerne
+- Oppfølging fra Martin, Kenneth og Anita
+- Velkommen til Discord-serveren vår (frivillig)
+   - Martin eller Kenneth er tilgjengelig i `general` kl. 13 - 14 mandager, onsdager og fredager
+   - De er også tilgjengelige på DM - brukernavnene er `waste1` (Martin) og `im.jst.ken` (Kenneth)
+
 Dette repoet inneholder eksempler brukt i GET Academys **gratis kvalifiseringskurs i programmering**.
 
 I løpet av kurset bygger vi et lite spill inspirert av **Flappy Bird** ved hjelp av enkel JavaScript og HTML Canvas.

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas mal</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <img id="dog" src="https://atlantahumane.org/wp-content/uploads/2025/11/dog-hero.jpg"/>
+
+
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        const img = document.getElementById("dog");
+        ctx.drawImage(img, -280, 40);
+
+        ctx.fillStyle = 'blue';
+        // ctx.fillRect(x, y, bredde, høyde);
+        ctx.fillRect(100, 200, 100, 50);
+
+        ctx.strokeStyle = 'lightblue';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(100, 200, 100, 50);
+
+        ctx.fillStyle = 'green';
+        ctx.font = "50px Verdana";
+        ctx.fillText('Terje', 80, 300);
+    </script>
+</body>
+
+</html>

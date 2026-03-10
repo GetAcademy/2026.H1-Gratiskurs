@@ -17,7 +17,7 @@ Kurset er laget for personer som lurer på:
 
 Det kreves **ingen forkunnskaper**.
 
----
+---,lui
 
 # Hva vi bygger
 

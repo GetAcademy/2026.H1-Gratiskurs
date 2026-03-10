@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas mal</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="drawThreeDots()">Tegn</button>
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        drawThreeDots();
+
+        function drawThreeDots() {
+            // sirkel
+            ctx.beginPath();
+            //                rgb(rødt, grønt, blått) - 0 til 255
+            ctx.fillStyle = 'rgb(0,0,255, 0.3)';
+            ctx.arc(120, 100, 50, 0, 2 * Math.PI);
+            ctx.arc(280, 100, 50, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.fillStyle = 'rgb(255,0,0, 0.3)';
+            ctx.arc(200, 240, 50, 0, 2 * Math.PI);
+            //ctx.stroke();
+            ctx.fill();
+        }
+    </script>
+</body>
+
+</html>

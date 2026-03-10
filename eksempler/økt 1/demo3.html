@@ -16,19 +16,34 @@
     </style>
 </head>
 
-<body>
+<body onload="drawEverything()">
+    <img id="dog" src="https://atlantahumane.org/wp-content/uploads/2025/11/dog-hero.jpg" />
+
     <canvas id="canvas" width="800" height="600"></canvas>
 
     <script>
         const c = document.getElementById('canvas');
         const ctx = c.getContext('2d');
 
-        drawRect(50, 50, 'green');
-        drawRect(300, 300, 'orange');
+        // 1: Rekkefølge
+        // 2: Bilder og onload
+
+        function drawEverything() {
+            const img = document.getElementById("dog");
+            ctx.drawImage(img, -280, 40);
+
+            drawThreeRects(50, 50);
+        }
+
+        function drawThreeRects(x, y) {
+            drawRect(40 + x, 40 + y, 'red');
+            drawRect(20 + x, 20 + y, 'orange');
+            drawRect(x, y, 'green');
+        }
 
         function drawRect(x, y, color) {
             ctx.fillStyle = color;
-            ctx.fillRect(x, y, 300, 200);            
+            ctx.fillRect(x, y, 100, 70);
         }
     </script>
 </body>

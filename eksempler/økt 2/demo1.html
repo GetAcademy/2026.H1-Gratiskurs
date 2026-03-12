@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas mal</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="gameLoop()">
+    <img id="dog" src="https://atlantahumane.org/wp-content/uploads/2025/11/dog-hero.jpg" />
+    <canvas id="canvas" width="400" height="600"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+        const img = document.getElementById("dog");
+
+        let rectX = 50;
+        let rectY = 50;
+        let speedX = -3;
+        let speedY = 0;
+        const rectWidth = 100;
+        const rectHeight = 70;
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update() {
+            rectX += speedX;
+            rectY += speedY;
+
+            // sprette i venstre vegg?
+            if (rectX <= 0 && speedX < 0) {
+                speedX = -speedX;
+            }
+
+            // sprette i høyre vegg?
+            if (rectX + rectWidth >= 400 && speedX > 0) {
+                speedX = -speedX;
+            }
+
+            // sprette i nedre vegg?
+
+            // sprette i øvre vegg?
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, 400, 600);
+            drawRect(rectX, rectY, 'green');
+        }
+
+
+        function drawRect(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, rectWidth, rectHeight);
+        }
+    </script>
+</body>
+
+</html>

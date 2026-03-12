@@ -17,7 +17,7 @@
 </head>
 
 <body onload="gameLoop()">
-    <img id="skog" src="../img/skog.jpg" />
+    <img id="skog" src="../img/skog2.jpg" />
     <canvas id="canvas" width="600" height="600"></canvas>
 
     <script>
@@ -27,6 +27,8 @@
 
         let canvasWidth = c.width;
         let canvasHeight = c.height;
+        let backgroundX = 0;
+        const backgroundWidth = 1798;
         let rectX = 50;
         let rectY = 50;
         let speedX = -3;
@@ -46,6 +48,10 @@
         function update() {
             rectX += speedX;
             rectY += speedY;
+            backgroundX--;
+            if( backgroundX< -backgroundWidth){
+                backgroundX += backgroundWidth;
+            }
 
             // sprette i venstre vegg?
             if (rectX <= 0 && speedX < 0) {
@@ -69,8 +75,8 @@
         }
 
         function draw() {
-            //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+            ctx.drawImage(img, backgroundX, 0);
+            ctx.drawImage(img, backgroundX + backgroundWidth, 0);
             const red = 255 * rectX / canvasWidth;
             const green = 255 * rectY / canvasHeight;
             drawRect(rectX, rectY, `rgb(${red},${green},127)`);

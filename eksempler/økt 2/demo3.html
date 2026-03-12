@@ -27,6 +27,8 @@
 
         let canvasWidth = c.width;
         let canvasHeight = c.height;
+        let backgroundX = 0;
+        const backgroundWidth = 900;
         let rectX = 50;
         let rectY = 50;
         let speedX = -3;
@@ -46,6 +48,10 @@
         function update() {
             rectX += speedX;
             rectY += speedY;
+            backgroundX--;
+            if( backgroundX< -backgroundWidth){
+                backgroundX += backgroundWidth;
+            }
 
             // sprette i venstre vegg?
             if (rectX <= 0 && speedX < 0) {
@@ -69,8 +75,8 @@
         }
 
         function draw() {
-            //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+            ctx.drawImage(img, backgroundX, 0, canvasHeight * 3 / 2, canvasHeight);
+            ctx.drawImage(img, backgroundX + backgroundWidth, 0, canvasHeight * 3 / 2, canvasHeight);
             const red = 255 * rectX / canvasWidth;
             const green = 255 * rectY / canvasHeight;
             drawRect(rectX, rectY, `rgb(${red},${green},127)`);

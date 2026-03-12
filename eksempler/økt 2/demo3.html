@@ -75,8 +75,8 @@
         }
 
         function draw() {
-            // ctx.drawImage(img, backgroundX, 0, canvasHeight * 3 / 2, canvasHeight);
-            // ctx.drawImage(img, backgroundX + backgroundWidth, 0, canvasHeight * 3 / 2, canvasHeight);
+            ctx.drawImage(img, backgroundX, 0, canvasHeight * 3 / 2, canvasHeight);
+            ctx.drawImage(img, backgroundX + backgroundWidth, 0, canvasHeight * 3 / 2, canvasHeight);
             const red = 255 * rectX / canvasWidth;
             const green = 255 * rectY / canvasHeight;
             drawRect(rectX, rectY, `rgb(${red},${green},127)`);

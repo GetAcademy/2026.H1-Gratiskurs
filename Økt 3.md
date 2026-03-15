@@ -1,235 +1,190 @@
-# Økt 3 – Tastestyring, kollisjon og «Flappy Martin»
-**JavaScript Canvas – stegvis progresjon**
+# Gratiskurs – Økt 3 (Oppdatert mars 2026)
 
-I denne økten jobber vi med tre korte og tydelige deler:
-1. En helt enkel firkant for repetisjon av game loop og tastestyring  
-1. demo4.html for å introdusere kollisjon og game over  
-1. Tilfeldige tall og farger
-1. demo8.html og veien videre mot «Flappy Martin»  
+## Mål for økten
 
-Målet er å lære noen få, viktige mekanikker – og bruke dem flere ganger.
+I denne økten går vi fra enkel animasjon til et faktisk spill. Vi bygger steg for steg en enkel versjon av **Flappy Bird**.
 
----
+Fokus:
 
-## Del 1 – Repetisjon: én enkel firkant + tastestyring
+* Gravitasjon
+* Kollisjon
+* Hindringer
+* Score
+* Refaktorering underveis slik at koden holder en god struktur
 
-Vi starter med et helt enkelt oppsett:
-- én firkant
-- posisjon `x` og `y`
-- en game loop med `requestAnimationFrame`
-
-Formålet er å repetere grunnmønsteret før vi går videre.
-
-### 1.1 Game loop og tegning
-
-Firkanten tegnes basert på nåværende `x`- og `y`-posisjon.
-Game loop-en oppdaterer posisjon og tegner på nytt for hver frame.
-
-Rød tråd:
-> Game loop = oppdater state → tegn basert på state → neste frame
+Målet er ikke perfekt kode, men å vise hvordan man **tenker som utvikler**: vi bygger litt, tester, og forbedrer strukturen underveis.
 
 ---
 
-### 1.2 Tastestyring – styre posisjon direkte
+# Del 1 – Kort repetisjon
 
-Vi legger først inn enkel tastestyring der tastene endrer posisjon direkte.
-Dette er bevisst «naivt», og brukes bare for å komme raskt i gang.
+Vi starter med koden fra forrige økt.
 
-#### Variabler
+Repetisjon av konsepter:
 
-```js
-let leftPressed = false;
-let rightPressed = false;
-let upPressed = false;
-let downPressed = false;
-```
+* variabler
+* if-setninger
+* animasjon i game loop
+* sprett i vegg
 
-#### Tastelyttere
+Spørsmål til deltakerne:
 
-```js
-function handleKeyDown(event) {
-    if (event.code === 'ArrowLeft') leftPressed = true;
-    if (event.code === 'ArrowRight') rightPressed = true;
-    if (event.code === 'ArrowUp') upPressed = true;
-    if (event.code === 'ArrowDown') downPressed = true;
+* Hvor styres farten?
+* Hva gjør if-setningen?
+* Hvorfor spretter objektet?
+
+Poenget er å minne deltakerne på hvordan **game loop** fungerer:
+
+update → draw → requestAnimationFrame
+
+---
+
+# Del 2 – Gravitasjon
+
+Nå lager vi noe som **faller nedover**.
+
+Vi introduserer en ny variabel:
+
+* vertical velocity (vy)
+
+Eksempel:
+
+vy += 0.3
+
+y += vy
+
+Forklaring:
+
+* Objektet får mer og mer fart nedover
+* Dette kalles akselerasjon
+* Gravitasjon er bare en konstant som legges til farten
+
+Visualisering:
+
+* Tegn en enkel firkant eller sirkel
+* Den starter midt på skjermen
+* Den faller nedover
+
+---
+
+# Del 3 – Bakken og sprett
+
+Vi legger til en bakke.
+
+Hvis objektet treffer bakken:
+
+if (y > groundY) {
+y = groundY
+vy = -vy
 }
 
-function handleKeyUp(event) {
-    if (event.code === 'ArrowLeft') leftPressed = false;
-    if (event.code === 'ArrowRight') rightPressed = false;
-    if (event.code === 'ArrowUp') upPressed = false;
-    if (event.code === 'ArrowDown') downPressed = false;
-}
+Dette er samme idé som **sprett i vegg**, men nå vertikalt.
 
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keyup', handleKeyUp);
-```
+Snakk litt om hvordan vi:
 
-I game loop-en:
-- hvis `leftPressed` → reduser `x`
-- hvis `rightPressed` → øk `x`
-- tilsvarende for `y`
-
-Dette fungerer, men er ikke slik spill vanligvis bygges.
+* gjenbruker idéer
+* bruker samme mønster flere steder
 
 ---
 
-### 1.3 Tastestyring – styre fart i stedet for posisjon
+# Del 4 – Første hindring
 
-Neste forbedring:
-- tastene påvirker **fart**
-- farten påvirker posisjon
+Nå begynner vi å bygge **Flappy Bird**.
 
-Vi introduserer:
-- `vx` og `vy`
-- posisjon oppdateres basert på fart
+Vi starter veldig enkelt.
 
-Rød tråd:
-> Input → endrer fart → fart endrer posisjon
+Vi lager én variabel:
 
-Dette er samme mønster som vi senere bruker i demo8 med gravitasjon.
+pipeX
 
+Denne styrer hele hindringen.
 
----
+Alt annet er hardkodet.
 
-## Del 2 – demo4.html: Kollisjon og game over
+Eksempel:
 
-Nå skifter vi eksempel helt bevisst.
+* topp-rør
+* bunn-rør
+* hull i midten
 
-Vi åpner `demo4.html`, som allerede inneholder:
-- en firkant som beveger seg automatisk
-- fart i x- og y-retning
-- sprett i kantene
-
-### 2.1 Legge til en fast firkant
-
-Vi legger til:
-- én firkant med fast posisjon midt på skjermen
-- denne firkanten beveger seg ikke
-
-Nå har vi:
-- én firkant i bevegelse
-- én stillestående firkant
-
-Dette er et perfekt utgangspunkt for kollisjon.
+Begge tegnes basert på samme X-posisjon.
 
 ---
 
-### 2.2 Kollisjon mellom firkanter (AABB)
+# Del 5 – To hindringer
 
-#### Hva er AABB?
+Når én fungerer, legger vi til en til.
 
-AABB står for **Axis-Aligned Bounding Box**.
+pipeX1
+pipeX2
 
-- *Axis-aligned*: firkantene er ikke rotert
-- *Bounding box*: vi bruker en enkel firkant som representerer objektet
+Begge flytter seg mot venstre.
 
-Dette er den vanligste og enkleste kollisjonsmetoden i 2D-spill.
+pipeX -= speed
 
----
-
-#### Prinsipp
-
-To firkanter kolliderer **ikke** hvis:
-- den ene er helt til venstre for den andre
-- eller helt til høyre
-- eller helt over
-- eller helt under
-
-Hvis ingen av disse stemmer, har vi kollisjon.
+Dette gir følelsen av at spilleren flyr fremover.
 
 ---
 
-#### Kollisjonsfunksjon
+# Del 6 – Kollisjon
 
-```js
-function rectanglesCollide(r1, r2) {
-    const r1Right = r1.x + r1.width;
-    const r1Bottom = r1.y + r1.height;
-    const r2Right = r2.x + r2.width;
-    const r2Bottom = r2.y + r2.height;
+Nå sjekker vi om spilleren treffer hindringen.
 
-    const noCollision =
-        r1Right < r2.x ||
-        r1.x > r2Right ||
-        r1Bottom < r2.y ||
-        r1.y > r2Bottom;
+En enkel tilnærming:
 
-    return !noCollision;
-}
-```
+* sjekk om X overlapper
+* sjekk om Y er utenfor hullet
 
-Vi bruker denne funksjonen i game loop-en:
-- ved kollisjon stopper vi animasjonen
-- dette er vårt første *game over*
+Hvis kollisjon skjer:
 
-Rød tråd:
-> Kollisjon handler ikke om grafikk – bare om tall.
+* stopp spillet
+* eller nullstill
 
-## Del 3 Tilfeldige tall og farger
-
-`Math.random()` osv. 
+Poenget er å vise hvordan spill kan avgjøre hva som skjer.
 
 ---
 
-## Del 4 – demo8.html: Mot «Flappy Martin»
+# Del 7 – Score (hvis tid)
 
-Til slutt går vi tilbake til `demo8.html`.
+Hvis spilleren passerer en hindring:
 
-Vi ser kort på hva som allerede finnes:
-- gravitasjon
-- bakgrunn som beveger seg
-- en figur som faller
+score++
 
-Nå kan vi bruke verktøyene vi nettopp har lært.
+Vis scoren på skjermen.
 
----
-
-### 3.1 Tastestyring: space = hopp
-
-Vi bruker samme boolean-mønster som tidligere.
-
-```js
-let spacePressed = false;
-
-function handleKeyDown(event) {
-    if (event.code === 'Space') spacePressed = true;
-}
-
-function handleKeyUp(event) {
-    if (event.code === 'Space') spacePressed = false;
-}
-```
-
-I game loop-en:
-- hvis `spacePressed` → gi figuren et oppover-kick i y-fart
-- gravitasjonen trekker figuren ned igjen
+Dette gir en liten ekstra spillfølelse.
 
 ---
 
-### 3.2 Bakken er ikke sprett – bakken er tap
+# Del 8 – Refaktorering underveis
 
-I demo8 var bakken tidligere noe figuren spratt på.
+Underveis stopper vi noen ganger og forbedrer koden.
 
-Nå endrer vi betydningen:
-- bakken er en kollisjon
-- kollisjon med bakken gir *game over*
+Eksempler:
 
-Dette er samme kollisjonsidé som i demo4 – bare med en annen reaksjon.
+* samle variabler
+* rydde i navn
+* trekke ut små funksjoner
+
+Poenget er å vise at utviklere hele tiden spør:
+
+"Kan denne koden bli litt bedre?"
+
+Dette er en viktig del av programmering.
 
 ---
 
-### 3.3 Stolper og kollisjon
+# Del 9 – Oppsummering
 
-Vi legger til stolper:
-- stolper er firkanter
-- de beveger seg mot spilleren
+Vi har nå laget en enkel spillmotor med:
 
-Ved kollisjon mellom:
-- figur og stolpe
-- figur og bakken
+* gravitasjon
+* hindringer
+* kollisjon
+* score
 
-→ *game over*
+Dette er mange av de samme idéene som brukes i ekte spill.
 
-Samme kollisjonsfunksjon brukes hele veien.
+Neste økt:
 
+Vi snakker mer om veien videre i GET Academy og hvilke muligheter deltakerne har hvis de ønsker å lære mer programmering.

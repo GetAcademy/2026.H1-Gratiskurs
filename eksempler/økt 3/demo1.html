@@ -31,12 +31,13 @@
         let canvasHeight = c.height;
         let backgroundX = 0;
         const backgroundWidth = 1798;
-        let rectX = 400;
-        let rectY = 0;
-        let speedX = 3;
-        let speedY = 1;
+        let rectX = canvasWidth / 4;
+        let rectY = canvasHeight / 2;
+        let speedX = 0;
+        let speedY = 0;
+        let gravity = 0.5;
         const rectWidth = 100;
-        const rectHeight =  rectWidth * 446/630;
+        const rectHeight = rectWidth * 446 / 630;
 
         function init() {
             imgBackground = document.getElementById("skog");
@@ -51,31 +52,18 @@
         }
 
         function update() {
-            rectX += speedX;
-            rectY += speedY;
+            // sprette i nedre vegg?
+            if (rectY + rectHeight > canvasHeight && speedY > 0) {
+                speedY = -speedY;
+            } else {
+                rectX += speedX;
+                rectY += speedY;
+            }
+            speedY += gravity;
+
             backgroundX--;
             if (backgroundX < -backgroundWidth) {
                 backgroundX += backgroundWidth;
-            }
-
-            // sprette i venstre vegg?
-            if (rectX <= 0 && speedX < 0) {
-                speedX = -speedX;
-            }
-
-            // sprette i høyre vegg?
-            if (rectX + rectWidth >= canvasWidth && speedX > 0) {
-                speedX = -speedX;
-            }
-
-            // sprette i øvre vegg?
-            if (rectY <= 0 && speedY < 0) {
-                speedY = -speedY;
-            }
-
-            // sprette i nedre vegg?
-            if (rectY + rectHeight >= canvasHeight && speedY > 0) {
-                speedY = -speedY;
             }
         }
 

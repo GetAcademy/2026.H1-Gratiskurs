@@ -1,190 +1,276 @@
-# Gratiskurs – Økt 3 (Oppdatert mars 2026)
+# Gratiskurs – Økt 3 (Ny versjon mars 2026)
 
 ## Mål for økten
 
-I denne økten går vi fra enkel animasjon til et faktisk spill. Vi bygger steg for steg en enkel versjon av **Flappy Bird**.
+I denne økten går vi fra enkel animasjon til et faktisk spill.
 
-Fokus:
+Vi bygger steg for steg en enkel versjon av **Flappy Bird** ved å kombinere noen få, viktige konsepter:
 
-* Gravitasjon
-* Kollisjon
-* Hindringer
-* Score
-* Refaktorering underveis slik at koden holder en god struktur
+* tastestyring
+* fart og gravitasjon
+* kollisjon
+* hindringer
+* enkel spill‑logikk
 
-Målet er ikke perfekt kode, men å vise hvordan man **tenker som utvikler**: vi bygger litt, tester, og forbedrer strukturen underveis.
+Rød tråd:
 
----
-
-# Del 1 – Kort repetisjon
-
-Vi starter med koden fra forrige økt.
-
-Repetisjon av konsepter:
-
-* variabler
-* if-setninger
-* animasjon i game loop
-* sprett i vegg
-
-Spørsmål til deltakerne:
-
-* Hvor styres farten?
-* Hva gjør if-setningen?
-* Hvorfor spretter objektet?
-
-Poenget er å minne deltakerne på hvordan **game loop** fungerer:
-
-update → draw → requestAnimationFrame
+> Vi bygger litt → tester → forbedrer koden underveis (refaktorering)
 
 ---
 
-# Del 2 – Gravitasjon
+# Del 1 – Repetisjon: game loop og enkel bevegelse
 
-Nå lager vi noe som **faller nedover**.
+Vi starter med en enkel firkant og repeterer:
 
-Vi introduserer en ny variabel:
+* `x` og `y`
+* game loop
+* tegning i canvas
 
-* vertical velocity (vy)
+Rød tråd:
 
-Eksempel:
+> update → draw → requestAnimationFrame
 
+Kort spørsmål til deltakerne:
+
+* Hva styrer bevegelsen?
+* Hva skjer hvis vi endrer en variabel?
+
+---
+
+# Del 2 – Tastestyring (to måter)
+
+## 2.1 Styre posisjon direkte (naiv løsning)
+
+Vi starter enkelt:
+
+* piltaster endrer `x` og `y` direkte
+
+Poeng:
+
+* lett å forstå
+* men ikke slik spill vanligvis bygges
+
+---
+
+## 2.2 Styre fart i stedet for posisjon
+
+Vi forbedrer modellen:
+
+* introduserer `vx` og `vy`
+* tastene påvirker fart
+* farten påvirker posisjon
+
+Rød tråd:
+
+> input → fart → posisjon
+
+Dette er samme modell vi bruker videre.
+
+---
+
+# Del 3 – Gravitasjon
+
+Vi lager noe som faller.
+
+```js
 vy += 0.3
-
 y += vy
+```
 
 Forklaring:
 
-* Objektet får mer og mer fart nedover
-* Dette kalles akselerasjon
-* Gravitasjon er bare en konstant som legges til farten
+* objektet får mer og mer fart nedover
+* dette er akselerasjon
 
 Visualisering:
 
-* Tegn en enkel firkant eller sirkel
-* Den starter midt på skjermen
-* Den faller nedover
+* firkant starter midt på skjermen
+* faller nedover
 
 ---
 
-# Del 3 – Bakken og sprett
+# Del 4 – Flappy-hopp (space)
+
+Vi kobler tastestyring til fysikk.
+
+```js
+document.addEventListener("keydown", handleKeyDown)
+
+function handleKeyDown(e){
+    if(e.code === "Space"){
+        vy = -8
+    }
+}
+```
+
+Forklaring:
+
+* space gir et "kick" oppover
+* gravitasjon trekker ned igjen
+
+Dette er kjernen i Flappy Bird.
+
+---
+
+# Del 5 – Bakken
 
 Vi legger til en bakke.
 
-Hvis objektet treffer bakken:
-
-if (y > groundY) {
-y = groundY
-vy = -vy
+```js
+if(y > groundY){
+    y = groundY
+    vy = -vy * 0.8
 }
+```
 
-Dette er samme idé som **sprett i vegg**, men nå vertikalt.
+Koble til tidligere:
 
-Snakk litt om hvordan vi:
+* samme idé som sprett i vegg
+* gjenbruk av mønster
 
-* gjenbruker idéer
-* bruker samme mønster flere steder
+Mulig variasjon:
 
----
-
-# Del 4 – Første hindring
-
-Nå begynner vi å bygge **Flappy Bird**.
-
-Vi starter veldig enkelt.
-
-Vi lager én variabel:
-
-pipeX
-
-Denne styrer hele hindringen.
-
-Alt annet er hardkodet.
-
-Eksempel:
-
-* topp-rør
-* bunn-rør
-* hull i midten
-
-Begge tegnes basert på samme X-posisjon.
+* bakken kan være *game over* i stedet for sprett
 
 ---
 
-# Del 5 – To hindringer
+# Del 6 – Første hindring
 
-Når én fungerer, legger vi til en til.
+Vi starter enkelt.
 
-pipeX1
-pipeX2
+Én variabel:
 
-Begge flytter seg mot venstre.
+```js
+let pipeX = 800
+```
 
-pipeX -= speed
+Tegn to firkanter:
 
-Dette gir følelsen av at spilleren flyr fremover.
+* topp
+* bunn
+
+Alt styres av `pipeX`.
+
+Bevegelse:
+
+```js
+pipeX -= 2
+```
 
 ---
 
-# Del 6 – Kollisjon
+# Del 7 – Flere hindringer
 
-Nå sjekker vi om spilleren treffer hindringen.
+Når én fungerer:
 
-En enkel tilnærming:
+```js
+let pipe2X = 1200
+```
 
-* sjekk om X overlapper
-* sjekk om Y er utenfor hullet
+Begge flytter seg.
 
-Hvis kollisjon skjer:
+Poeng:
+
+* vi kopierer og tilpasser
+* senere kunne vi gjort dette mer generelt (refaktorering)
+
+---
+
+# Del 8 – Kollisjon mellom firkanter
+
+Vi bruker en viktig idé:
+
+Det finnes **fire måter to firkanter IKKE kolliderer på**:
+
+1. Den ene er til venstre
+2. Den ene er til høyre
+3. Den ene er over
+4. Den ene er under
+
+Hvis ingen av disse stemmer → kollisjon.
+
+```js
+function isColliding(r1, r2){
+    const noCollision =
+        r1.x + r1.width < r2.x ||
+        r1.x > r2.x + r2.width ||
+        r1.y + r1.height < r2.y ||
+        r1.y > r2.y + r2.height
+
+    return !noCollision
+}
+```
+
+Pedagogisk grep:
+
+* tegn to firkanter
+* spør: "Når treffer de ikke hverandre?"
+
+Viktig poeng:
+
+> Kollisjon handler bare om tall – ikke grafikk
+
+---
+
+# Del 9 – Game over
+
+Ved kollisjon:
 
 * stopp spillet
 * eller nullstill
 
-Poenget er å vise hvordan spill kan avgjøre hva som skjer.
+Samme gjelder for bakken hvis vi velger det.
 
 ---
 
-# Del 7 – Score (hvis tid)
+# Del 10 – Score (hvis tid)
 
-Hvis spilleren passerer en hindring:
-
+```js
 score++
+```
 
-Vis scoren på skjermen.
+Vis på skjermen.
 
-Dette gir en liten ekstra spillfølelse.
+Gir ekstra spillfølelse.
 
 ---
 
-# Del 8 – Refaktorering underveis
+# Del 11 – Refaktorering underveis
 
-Underveis stopper vi noen ganger og forbedrer koden.
+Underveis stopper vi og forbedrer koden.
 
 Eksempler:
 
-* samle variabler
-* rydde i navn
-* trekke ut små funksjoner
+* bedre variabelnavn
+* samle logikk
+* lage små funksjoner
 
-Poenget er å vise at utviklere hele tiden spør:
+Eksempel:
 
-"Kan denne koden bli litt bedre?"
+```
+update()
+draw()
+checkCollision()
+```
 
-Dette er en viktig del av programmering.
+Poeng:
+
+> Vi rydder litt og litt – ikke alt på en gang
 
 ---
 
-# Del 9 – Oppsummering
+# Del 12 – Oppsummering
 
-Vi har nå laget en enkel spillmotor med:
+Vi har laget et lite spill med:
 
-* gravitasjon
+* fysikk (gravitasjon)
+* input (tastatur)
 * hindringer
 * kollisjon
-* score
+* regler
 
-Dette er mange av de samme idéene som brukes i ekte spill.
+Dette er de samme byggesteinene som brukes i ekte spill.
 
 Neste økt:
 
-Vi snakker mer om veien videre i GET Academy og hvilke muligheter deltakerne har hvis de ønsker å lære mer programmering.
+Vi ser på veien videre i GET Academy og hvordan man kan lære mer programmering.

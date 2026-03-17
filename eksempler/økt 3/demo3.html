@@ -31,15 +31,16 @@
         let canvasHeight = c.height;
         let backgroundX = 0;
         const backgroundWidth = 1798;
-        let rectX = canvasWidth / 4;
-        let rectY = canvasHeight / 2;
+        let birdX = canvasWidth / 4;
+        let birdY = canvasHeight / 2;
         let speedX = 0;
         let speedY = 0;
         let gravity = 0.5;
         let pipeX = canvasWidth;
         let pipeSpeedX = -2;
-        const rectWidth = 100;
-        const rectHeight = rectWidth * 446 / 630;
+        let isRunning = true;
+        const birdWidth = 100;
+        const birdHeight = birdWidth * 446 / 630;
         const pipeWidth = 100;
         const pipeHeight = 150;
 
@@ -52,24 +53,58 @@
         function gameLoop() {
             update();
             draw();
-            requestAnimationFrame(gameLoop);
+            if (isRunning) {
+                requestAnimationFrame(gameLoop);
+            }
         }
 
         function update() {
-            // sprette i nedre vegg?
-            if (rectY + rectHeight > canvasHeight && speedY > 0) {
-                speedY = -speedY;
-            } else {
-                rectX += speedX;
-                rectY += speedY;
-            }
-            speedY += gravity;
+            updateBackground();
+            updateBird();
+            updatePipes();
+            checkCollision();
+        }
 
+        function checkCollision() {
+            const birdLeft = birdX;
+            const birdRight = birdX + birdWidth;
+            const birdTop = birdY;
+            const birdBottom = birdY + birdHeight;
+
+            const pipeLeft = pipeX;
+            const pipeRight = pipeX + pipeWidth;
+            const pipeTop = canvasHeight - pipeHeight;
+            const pipeBottom = canvasHeight;
+
+            const isBirdAbove = birdBottom < pipeTop;
+            const isBirdBelow = birdTop > pipeBottom;
+            const isBirdLeft = birdRight < pipeLeft;
+            const isBirdRight = birdLeft > pipeRight;
+
+            if (!(isBirdAbove || isBirdBelow || isBirdLeft || isBirdRight)) {
+                isRunning = false;                
+            }
+        }
+
+        function updateBackground() {
             backgroundX--;
             if (backgroundX < -backgroundWidth) {
                 backgroundX += backgroundWidth;
             }
+        }
 
+        function updateBird() {
+            // sprette i nedre vegg?
+            if (birdY + birdHeight > canvasHeight && speedY > 0) {
+                speedY = -speedY;
+            } else {
+                birdX += speedX;
+                birdY += speedY;
+            }
+            speedY += gravity;
+        }
+
+        function updatePipes() {
             pipeX += pipeSpeedX;
             if (pipeX < -pipeWidth) {
                 pipeX = canvasWidth;
@@ -91,13 +126,13 @@
         }
 
         function drawFlappyBird() {
-            drawRect(rectX, rectY, `white`);
-            ctx.drawImage(imgBird, rectX, rectY, rectWidth, rectHeight);
+            drawRect(birdX, birdY, `white`);
+            ctx.drawImage(imgBird, birdX, birdY, birdWidth, birdHeight);
         }
 
         function drawRect(x, y, color) {
             ctx.fillStyle = color;
-            ctx.fillRect(x, y, rectWidth, rectHeight);
+            ctx.fillRect(x, y, birdWidth, birdHeight);
         }
     </script>
 </body>

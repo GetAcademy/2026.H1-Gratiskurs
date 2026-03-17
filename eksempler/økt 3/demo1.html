@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas mal</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+    <img id="skog" src="../img/skog2.jpg" />
+    <img id="bird" src="../img/flappyBird.png" />
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        let imgBackground;
+        let imgBird;
+        let canvasWidth = c.width;
+        let canvasHeight = c.height;
+        let backgroundX = 0;
+        const backgroundWidth = 1798;
+        let rectX = 400;
+        let rectY = 0;
+        let speedX = 3;
+        let speedY = 1;
+        const rectWidth = 100;
+        const rectHeight =  rectWidth * 446/630;
+
+        function init() {
+            imgBackground = document.getElementById("skog");
+            imgBird = document.getElementById("bird");
+            gameLoop();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function update() {
+            rectX += speedX;
+            rectY += speedY;
+            backgroundX--;
+            if (backgroundX < -backgroundWidth) {
+                backgroundX += backgroundWidth;
+            }
+
+            // sprette i venstre vegg?
+            if (rectX <= 0 && speedX < 0) {
+                speedX = -speedX;
+            }
+
+            // sprette i høyre vegg?
+            if (rectX + rectWidth >= canvasWidth && speedX > 0) {
+                speedX = -speedX;
+            }
+
+            // sprette i øvre vegg?
+            if (rectY <= 0 && speedY < 0) {
+                speedY = -speedY;
+            }
+
+            // sprette i nedre vegg?
+            if (rectY + rectHeight >= canvasHeight && speedY > 0) {
+                speedY = -speedY;
+            }
+        }
+
+        function draw() {
+            ctx.drawImage(imgBackground, backgroundX, 0);
+            ctx.drawImage(imgBackground, backgroundX + backgroundWidth, 0);
+            drawFlappyBird();
+        }
+
+        function drawFlappyBird() {
+            drawRect(rectX, rectY, `white`);
+            ctx.drawImage(imgBird, rectX, rectY, rectWidth, rectHeight);
+        }
+
+        function drawRect(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, rectWidth, rectHeight);
+        }
+    </script>
+</body>
+
+</html>

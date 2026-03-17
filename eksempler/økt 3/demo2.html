@@ -36,6 +36,8 @@
         let speedX = 0;
         let speedY = 0;
         let gravity = 0.5;
+        let pipeX = canvasWidth;
+        let pipeSpeedX = -2;
         const rectWidth = 100;
         const rectHeight = rectWidth * 446 / 630;
         const pipeWidth = 100;
@@ -67,6 +69,12 @@
             if (backgroundX < -backgroundWidth) {
                 backgroundX += backgroundWidth;
             }
+
+            pipeX += pipeSpeedX;
+            if (pipeX < -pipeWidth) {
+                pipeX = canvasWidth;
+                // pipeSpeedX--;
+            }
         }
 
         function draw() {
@@ -78,8 +86,8 @@
 
         function drawPipes() {
             ctx.fillStyle = 'yellow';
-            ctx.fillRect(400, 0, pipeWidth, pipeHeight);
-            ctx.fillRect(400, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
+            ctx.fillRect(pipeX, 0, pipeWidth, pipeHeight);
+            ctx.fillRect(pipeX, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
         }
 
         function drawFlappyBird() {

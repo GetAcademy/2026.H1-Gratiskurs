@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas mal</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+    <img id="skog" src="../img/skog2.jpg" />
+    <img id="bird" src="../img/flappyBird.png" />
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script>
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+
+        let pipeColor;
+        let hasPlayed = false;
+        let score = 0;
+        let imgBackground;
+        let imgBird;
+        let canvasWidth = c.width;
+        let canvasHeight = c.height;
+        let backgroundX = 0;
+        const backgroundWidth = 1798;
+        let birdX = canvasWidth / 4;
+        let birdY = canvasHeight / 2;
+        let birdSpeedY = 0;
+        let gravity = 0.5;
+        let pipeX = canvasWidth;
+        let pipeSpeedX = -2;
+        let isRunning = false;
+        const birdWidth = 100;
+        const birdHeight = birdWidth * 446 / 630;
+        const pipeWidth = 100;
+        const pipeHeight = 150;
+
+        function init() {
+            imgBackground = document.getElementById("skog");
+            imgBird = document.getElementById("bird");
+            document.addEventListener('keydown', handleKeyDown);
+            gameLoop();
+        }
+
+        function handleKeyDown(event) {
+            if (event.code === 'Space') {
+                if (isRunning) {
+                    birdSpeedY = -10;
+                } else {
+                    isRunning = true;
+                    birdY = canvasHeight / 2;
+                    birdSpeedY = 0;
+                    pipeX = canvasWidth;
+                    score = 0;
+                    hasPlayed = true;
+                    pipeColor = createRandomColor();
+                    gameLoop();
+                }
+            }
+        }
+
+        function createRandomColor() {
+            return `rgb(${createRandomNumber()},${createRandomNumber()},${createRandomNumber()})`;
+        }
+
+        function createRandomNumber() {
+            return Math.floor(Math.random() * 256);
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            if (isRunning) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function update() {
+            updateBackground();
+            updateBird();
+            updatePipes();
+            updateScore();
+            checkCollision();
+        }
+
+        function checkCollision() {
+            const isCollidingWithGround = birdY >= canvasHeight - birdHeight;
+            const isCollidingWithUpperPipe = isCollidingWithPipe(0, pipeHeight);
+            const isCollidingWithLowerPipe = isCollidingWithPipe(canvasHeight - pipeHeight, canvasHeight);
+            if (isCollidingWithGround
+                || isCollidingWithUpperPipe
+                || isCollidingWithLowerPipe
+            ) {
+                isRunning = false;
+            }
+        }
+
+        function isCollidingWithPipe(pipeTop, pipeBottom) {
+            const birdLeft = birdX;
+            const birdRight = birdX + birdWidth;
+            const birdTop = birdY;
+            const birdBottom = birdY + birdHeight;
+
+            const pipeLeft = pipeX;
+            const pipeRight = pipeX + pipeWidth;
+
+            const isBirdAbove = birdBottom < pipeTop;
+            const isBirdBelow = birdTop > pipeBottom;
+            const isBirdLeft = birdRight < pipeLeft;
+            const isBirdRight = birdLeft > pipeRight;
+
+            const isNotColliding = isBirdAbove || isBirdBelow || isBirdLeft || isBirdRight;
+            const isColliding = !isNotColliding;
+            return isColliding;
+        }
+
+        function updateScore() {
+            const pipeRight = pipeX + pipeWidth;
+            const lastPipeRight = pipeRight - pipeSpeedX;
+            if (birdX > pipeRight && birdX <= lastPipeRight) {
+                score++;
+            }
+        }
+
+        function updateBackground() {
+            backgroundX--;
+            if (backgroundX < -backgroundWidth) {
+                backgroundX += backgroundWidth;
+            }
+        }
+
+        function updateBird() {
+            birdY += birdSpeedY;
+            birdSpeedY += gravity;
+        }
+
+        function updatePipes() {
+            pipeX += pipeSpeedX;
+            if (pipeX < -pipeWidth) {
+                pipeX = canvasWidth;
+                // pipeSpeedX--;
+            }
+        }
+
+        function draw() {
+            ctx.drawImage(imgBackground, backgroundX, 0);
+            ctx.drawImage(imgBackground, backgroundX + backgroundWidth, 0);
+            drawPipes();
+            drawFlappyBird();
+            drawText(`Score: ${score}`, 20, 50, 50);
+            if (!isRunning) {
+                if (hasPlayed) {
+                    drawText('Game over', 50, 500, 100);
+                    drawText('Press <space> to restart', 75, 540, 40);
+                } else {
+                    drawText('Press <space> to start!', 75, 540, 40);
+                }
+            }
+        }
+
+        function drawText(text, x, y, size) {
+            ctx.font = `${size}px Arial`;
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'blue';
+            ctx.strokeText(text, x, y);
+            ctx.fillStyle = 'yellow';
+            ctx.fillText(text, x, y);
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = pipeColor; //'yellowgreen';
+            ctx.fillRect(pipeX, 0, pipeWidth, pipeHeight);
+            ctx.fillRect(pipeX, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
+            ctx.strokeStyle = 'gray';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pipeX, 0, pipeWidth, pipeHeight);
+            ctx.strokeRect(pipeX, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
+        }
+
+        function drawFlappyBird() {
+            drawRect(birdX, birdY, `white`);
+            ctx.drawImage(imgBird, birdX, birdY, birdWidth, birdHeight);
+        }
+
+        function drawRect(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, birdWidth, birdHeight);
+        }
+    </script>
+</body>
+
+</html>

@@ -8,3 +8,6 @@ https://photos.app.goo.gl/j8T2JoMBFYXpuD3n6
 
 ## Tirsdag 17.3 - økt 3
 https://photos.app.goo.gl/ECz7NLZxomjWCj248
+
+## Torsdag 19.3 - økt 4
+https://photos.app.goo.gl/QVoM1CAVgBHJyD7w9

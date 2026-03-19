@@ -172,6 +172,10 @@
             ctx.fillStyle = 'yellowgreen';
             ctx.fillRect(pipeX, 0, pipeWidth, pipeHeight);
             ctx.fillRect(pipeX, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
+            ctx.strokeStyle = 'darkgreen';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pipeX, 0, pipeWidth, pipeHeight);
+            ctx.strokeRect(pipeX, canvasHeight - pipeHeight, pipeWidth, pipeHeight);
         }
 
         function drawFlappyBird() {

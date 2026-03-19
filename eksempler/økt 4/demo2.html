@@ -81,9 +81,13 @@
         }
 
         function checkCollision() {
-            if (isCollidingWithPipe(0, pipeHeight)
-                || isCollidingWithPipe(canvasHeight - pipeHeight, canvasHeight)
-                || birdY >= canvasHeight - birdHeight) {
+            const isCollidingWithGround = birdY >= canvasHeight - birdHeight;
+            const isCollidingWithUpperPipe = isCollidingWithPipe(0, pipeHeight);
+            const isCollidingWithLowerPipe = isCollidingWithPipe(canvasHeight - pipeHeight, canvasHeight);
+            if (isCollidingWithGround
+                || isCollidingWithUpperPipe
+                || isCollidingWithLowerPipe
+            ) {
                 isRunning = false;
             }
         }

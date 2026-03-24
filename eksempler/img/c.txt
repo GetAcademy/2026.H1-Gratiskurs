@@ -1,0 +1,14 @@
+ Volume in drive C has no label.
+ Volume Serial Number is 767D-1FD6
+
+ Directory of C:\Users\Terje\source\repos\2026.H1-Gratiskurs\eksempler\img
+
+20.03.2026  09:18    <DIR>          .
+19.03.2026  13:55    <DIR>          ..
+20.03.2026  09:18                 0 c.txt
+20.03.2026  09:18           335ÿ545 dog.png
+19.03.2026  13:54             2ÿ563 flappyBird.png
+12.03.2026  15:09           381ÿ143 skog2.jpg
+20.03.2026  09:18                 8 terje.txt
+               5 File(s)        719ÿ259 bytes
+               2 Dir(s)  273ÿ079ÿ603ÿ200 bytes free
